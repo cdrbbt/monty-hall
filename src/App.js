@@ -1,5 +1,8 @@
 import React from 'react';
 import './App.css';
+import door from './img/door.png'
+import goat from './img/goat.png'
+import prize from './img/prize.png'
 
 class App extends React.Component {
 
@@ -83,7 +86,7 @@ class App extends React.Component {
   uniformDoors(callback, open) {
     const doors = []
     for (let i = 0; i < this.numberOfDoors; i++) {
-      doors.push(<Door num={i} onClick={callback(i)} key={i} open={open} />)
+      doors.push(<Door num={i} onClick={callback(i)} key={i} open={open} prize={false}/>)
     }
     return doors
   }
@@ -103,13 +106,15 @@ class App extends React.Component {
     onClick={this.selectSecondDoor(this.state.selectedDoor)}
     key={this.state.selectedDoor}
     num={this.state.selectedDoor}
-    open={false}/>
+    open={false}
+    prize={false}/>
 
     doors[this.state.otherDoor] = <Door 
     onClick={this.selectSecondDoor(this.state.otherDoor)}
     key={this.state.otherDoor}
     num={this.state.otherDoor}
-    open={false}/>
+    open={false}
+    prize={false}/>
 
     return doors
   }
@@ -119,18 +124,19 @@ class App extends React.Component {
     doors[this.prize] = <Door 
     key={this.prize}
     num={this.prize}
-    open={false}/>
+    open={true}
+    prize={true}/>
     return doors
   }
 
   render() {
     const doors = this.generateDoors()
     return (
-      <div>
+      <div className="container">
         <h1>The Monty Hall Game</h1>
         <p>{this.generateInstructions()}</p>
         <button onClick={this.resetGame}>Reset</button>
-        {doors}
+        <div className="row row-cols-3">{doors}</div>
       </div>
     )
   }
@@ -138,10 +144,23 @@ class App extends React.Component {
 
 
 class Door extends React.Component {
+
+  formDoor = () => {
+    let src
+    if (!this.props.open) {
+      src = door
+    } else if (this.props.prize) {
+      src = prize
+    } else {
+      src = goat
+    }
+    return <img onClick={this.props.onClick} src={src} alt="door" className="img-fluid my-1"/>
+  }
+
   render() {
     return (
-      <div className={this.props.open? "open": "closed"}>
-        <button onClick={this.props.onClick}>{this.props.num}</button>
+      <div className="col">
+        {this.formDoor()}
       </div>
     )
   }
